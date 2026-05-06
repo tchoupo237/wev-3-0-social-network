@@ -6,6 +6,13 @@
       "password": "123456",
       "confirmPassword": "123456",
       "id": "RDyEPscJwGw"
+    },
+    {
+      "nom": "papi",
+      "email": "papi@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "_E2KSuS0cJ4"
     }
   ],
   "posts": [

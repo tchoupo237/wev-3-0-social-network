@@ -34,13 +34,29 @@ const Inscription = () => {
                 toast.success("Inscription réussie !");
               })
               .catch((err) => {
-                console.error("Erreur lors de l'inscription :", err);
-                toast.error("Une erreur est survenue. Veuillez réessayer.");
+                handleAxiosError(err);
               });
           }
         });
     }
-    // console.log("Données d'inscription :", data);
+    // Fonction réutilisable pour gérer les erreurs de connexion au serveur
+    const handleAxiosError = (err) => {
+      if (!err.response) {
+        // Si err.response n'existe pas, c'est que le serveur n'a pas répondu (serveur éteint)
+        console.error("Le serveur est injoignable :", err);
+        toast.error(
+          "Le serveur est éteint. Veuillez lancer 'npm run server'.",
+          {
+            duration: 5000,
+            icon: "🔌",
+          },
+        );
+      } else {
+        // Le serveur a répondu, mais avec une erreur (ex: 404, 500)
+        console.error("Erreur serveur :", err.response.status);
+        toast.error("Une erreur est survenue sur le serveur.");
+      }
+    };
   };
 
   const inputContainerStyle = "relative mt-6";

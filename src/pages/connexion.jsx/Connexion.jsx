@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import { React, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,19 @@ const Connexion = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  // protection de mes route dashboard et les autres route qui sont sensible a l'authentification avec jsonparse pour convertir la string en objet et verifier si il y a un utilisateur dans le localstorage
+  useEffect(() => {
+    const user = localStorage.getItem("Utilisateurs");
+    if (!user) {
+      console.log("Aucun utilisateur connecté.");
+    } else {
+      console.log("Utilisateur connecté :", JSON.parse(user));
+      navigate("/"); // Redirige vers le dashboard ou la page d'accueil si un utilisateur est déjà connecté
+      return; // Empêche le rendu de la page de connexion si un utilisateur est déjà connecté
+      toast.info("Vous êtes déjà connecté. Redirection en cours...");
+    }
+  }, [navigate]);
 
   const onSubmit = async (data) => {
     try {
@@ -27,7 +40,7 @@ const Connexion = () => {
           toast.success(`Bienvenue, ${userTrouve.nom} !`);
           // Stockage des infos (sauf le mot de passe par sécurité)
           const { password, ...userSession } = userTrouve;
-          localStorage.setItem("user", JSON.stringify(userSession));
+          localStorage.setItem("Utilisateurs", JSON.stringify(userSession));
           navigate("/"); // Redirection vers le dashboard ou la page d'accueil
         } else {
           toast.error("Mot de passe incorrect.");
@@ -37,9 +50,21 @@ const Connexion = () => {
       }
     } catch (error) {
       console.error("Erreur technique :", error);
-      toast.error(
-        "Le serveur ne répond pas (Vérifie JSON Server sur le port 5000).",
-      );
+      // LOGIQUE DE DÉTECTION DU SERVEUR ÉTEINT OU INJOIGNABLE
+      if (!error.response) {
+        // Pas de réponse = le serveur n'a même pas pu être contacté (éteint)
+        toast.error(
+          "Serveur injoignable ! Lancez 'npm run server' dans votre terminal.",
+          {
+            duration: 6000,
+            icon: "🔌",
+            style: { border: "2px solid #ef4444", fontWeight: "bold" },
+          },
+        );
+      } else {
+        // Le serveur a répondu mais avec une erreur (ex: 404, 500)
+        toast.error("Erreur de connexion au service. Veuillez réessayer.");
+      }
     }
   };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
 import { Menu, User, Image as ImageIcon, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Accueil = () => {
   const {
@@ -10,6 +11,19 @@ const Accueil = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+
+  // protection de mes route dashboard et les autres route qui sont sensible a l'authentification avec jsonparse pour convertir la string en objet et verifier si il y a un utilisateur dans le localstorage
+  React.useEffect(() => {
+    const user = localStorage.getItem("Utilisateurs");
+    if (!user) {
+      console.log("Aucun utilisateur connecté.");
+      navigate("/connexion"); // Redirige vers la page de connexion si aucun utilisateur n'est trouvé
+      return;
+    } else {
+      console.log("Utilisateur connecté :", JSON.parse(user));
+    }
+  }, [navigate]);
 
   const onSubmit = (data) => {
     console.log("Nouvelle publication :", data);
