@@ -1,6 +1,8 @@
+import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Inscription = () => {
   const {
@@ -10,9 +12,35 @@ const Inscription = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
-    console.log("Données d'inscription :", data);
-    toast.success("Inscription réussie !");
+    if (data.password !== data.confirmPassword) {
+      toast.error("Les mots de passe ne correspondent pas.");
+    } else {
+      // verier qu'il y a pas deja un utilisateur avec le meme email dans la base de donner
+      axios
+        .get(`http://localhost:5000/Utilisateurs?email=${data.email}`)
+        .then((res) => {
+          if (res.data.length > 0) {
+            toast.error("Un utilisateur avec cet email existe déjà.");
+          } else {
+            // insertion de l'utilisateur dans la base de donner
+            axios
+              .post("http://localhost:5000/Utilisateurs", data)
+              .then((res) => {
+                console.log("Utilisateur ajouté :", res.data);
+                navigate("/connexion");
+                toast.success("Inscription réussie !");
+              })
+              .catch((err) => {
+                console.error("Erreur lors de l'inscription :", err);
+                toast.error("Une erreur est survenue. Veuillez réessayer.");
+              });
+          }
+        });
+    }
+    // console.log("Données d'inscription :", data);
   };
 
   const inputContainerStyle = "relative mt-6";

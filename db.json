@@ -1,5 +1,48 @@
 {
-  "Utilisateurs": [],
+  "Utilisateurs": [
+    {
+      "nom": "tchoupo",
+      "email": "tchoupochristian739@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "xrMYxn7t2hE"
+    },
+    {
+      "nom": "tchoupo",
+      "email": "tchoupochristian739@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "ML_q7JKGD1E"
+    },
+    {
+      "nom": "tchoupo",
+      "email": "tchoupochristian739@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "LsWWvldW6_4"
+    },
+    {
+      "nom": "brice",
+      "email": "tchoupochristian739@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "5cP5N0uymP8"
+    },
+    {
+      "nom": "brice",
+      "email": "brice@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "Yy1nxxyDBzA"
+    },
+    {
+      "nom": "maeva",
+      "email": "maeva@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": "J6OdJlrVlMM"
+    }
+  ],
   "posts": [
     {
       "id": "1",
@@ -7,5 +50,6 @@
       "contenu": "Bienvenue sur Drcmind social network !",
       "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
