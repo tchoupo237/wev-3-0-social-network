@@ -33,7 +33,7 @@ const Accueil = () => {
 
   return (
     <div className="min-h-screen bg-[#e9ecef] font-sans pb-10">
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
 
       {/* --- HEADER --- */}
       <header className="bg-[#1976d2] text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-50">

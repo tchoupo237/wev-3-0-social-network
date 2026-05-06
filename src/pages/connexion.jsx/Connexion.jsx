@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
@@ -11,10 +12,35 @@ const Connexion = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    // Logique de connexion à lier à JSON Server plus tard
-    console.log("Tentative de connexion :", data);
-    toast.success("Content de vous revoir !");
+  const onSubmit = async (data) => {
+    try {
+      const url = `http://localhost:5000/Utilisateurs?email=${data.email.toLowerCase().trim()}`;
+
+      const response = await axios.get(url);
+
+      // On vérification si l'utilisateur existe
+      if (response.data && response.data.length > 0) {
+        const userTrouve = response.data[0];
+
+        // Comparaison du mot de passe
+        if (userTrouve.password === data.password) {
+          toast.success(`Bienvenue, ${userTrouve.nom} !`);
+          // Stockage des infos (sauf le mot de passe par sécurité)
+          const { password, ...userSession } = userTrouve;
+          localStorage.setItem("user", JSON.stringify(userSession));
+          navigate("/"); // Redirection vers le dashboard ou la page d'accueil
+        } else {
+          toast.error("Mot de passe incorrect.");
+        }
+      } else {
+        toast.error("Cet email n'existe pas dans la base.");
+      }
+    } catch (error) {
+      console.error("Erreur technique :", error);
+      toast.error(
+        "Le serveur ne répond pas (Vérifie JSON Server sur le port 5000).",
+      );
+    }
   };
 
   // Constantes de style pour l'effet Material UI Outlined
@@ -24,7 +50,7 @@ const Connexion = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans">
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
 
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md border border-gray-200">
         <h1 className="text-2xl font-bold mb-8 text-gray-800 text-center uppercase tracking-tight">
@@ -109,10 +135,10 @@ const Connexion = () => {
         </form>
 
         {/* Lien vers l'inscription */}
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div className="mt-6 text-sm text-gray-600">
           Pas encore de compte ?{" "}
           <span
-            className="text-blue-600 cursor-pointer font-medium hover:underline"
+            className="text-[#1976d2] cursor-pointer font-medium hover:underline"
             onClick={() => navigate("/inscription")}
           >
             S'inscrire
