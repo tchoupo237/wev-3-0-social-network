@@ -1,0 +1,11 @@
+{
+  "Utilisateurs": [],
+  "posts": [
+    {
+      "id": "1",
+      "auteur": "Tacite",
+      "contenu": "Bienvenue sur Drcmind social network !",
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+}
