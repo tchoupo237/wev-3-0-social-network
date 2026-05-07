@@ -1,12 +1,33 @@
 import React from "react";
-import { MoreHorizontal, X, Globe2, User } from "lucide-react";
+import { MoreHorizontal, X, Globe, User } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function PostHeader({ data: post }) {
-  // Sécurité au cas où l'objet post n'est pas encore chargé
-  if (!post) return null;
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: (id) => {
+      return axios.delete(`http://localhost:5000/publications/${id}`);
+    },
+    onSuccess: () => {
+      toast.success("Post supprimé avec succès !");
+      queryClient.invalidateQueries(["publications"]); // Invalide la requête pour forcer un rafraîchissement des données
+    },
+    onError: (err) => {
+      toast.error("Une erreur s'est produite lors de la suppression du post");
+      console.error("Erreur lors de la suppression du post :", err);
+    },
+  });
 
+  const suprimerPost = (id) => {
+    mutate.mutate(id);
+  };
+
+  //recuperer l'utilisateur connecté pour afficher le bouton de suppression du post seulement si l'utilisateur connecté est l'auteur du post
+  const utilisateurConnecte = JSON.parse(localStorage.getItem("Utilisateurs"));
   return (
     <div className="flex items-center justify-between pt-3 pl-3 pr-3 ">
       {/* Avatar + Nom + Date */}
@@ -48,7 +69,7 @@ export default function PostHeader({ data: post }) {
                 : "À l'instant"}
             </span>
             <span>·</span>
-            <Globe2 size={12} className="text-gray-500" />
+            <Globe size={12} className="text-gray-500" />
           </div>
         </div>
       </div>
@@ -59,7 +80,10 @@ export default function PostHeader({ data: post }) {
           <MoreHorizontal size={20} />
         </button>
         <button className="p-2 hover:bg-gray-100 rounded-full text-gray-600 transition-colors">
-          <X size={20} />
+          {/* afficher le bouton de suppression du post seulement si l'utilisateur connecté est l'auteur du post */}
+          {post?.auteur === utilisateurConnecte?.nom && (
+            <X size={20} onClick={() => suprimerPost(post.id)} />
+          )}
         </button>
       </div>
     </div>

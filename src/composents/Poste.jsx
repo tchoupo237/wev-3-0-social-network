@@ -17,7 +17,7 @@ export default function Poste({ data: post }) {
           />
         )}
       </div>
-      <PostFooter />
+      <PostFooter data={post} post={post.id} />
     </article>
   );
 }

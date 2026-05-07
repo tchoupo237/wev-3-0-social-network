@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../composents/Navbar";
 import AjouterPublication from "../../composents/AjouterPublication";
 import Poste from "../../composents/Poste";
+import Loading from "../../composents/Loading";
 
 const Accueil = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Accueil = () => {
   });
 
   if (isLoading) {
-    return <h1>Chargement en cours...</h1>;
+    return <Loading />;
   }
   // fonction pour trier les publications par date de publication, les plus récentes en premier
   let pubTrier = publications.sort(
@@ -62,11 +63,19 @@ const Accueil = () => {
 
       <main className="max-w-2xl mx-auto mt-6 px-4">
         <AjouterPublication />
-
+        {pubTrier.length === 0 && (
+          <h1 className="text-center text-gray-500">
+            Aucune publication trouver...
+          </h1>
+        )}
         <div className="space-y-6">
-          {posts
-            ? pubTrier.map((post) => <Poste key={post.id} data={post} />)
-            : `<h1 className="text-center text-gray-500">Aucune publication trouver...</h1>`}
+          {posts ? (
+            pubTrier.map((post) => <Poste key={post.id} data={post} />)
+          ) : (
+            <h1 className="text-center text-gray-500">
+              Aucune publication trouver...
+            </h1>
+          )}
         </div>
       </main>
     </div>
