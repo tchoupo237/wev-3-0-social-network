@@ -5,7 +5,10 @@ import { RouterProvider } from "react-router/dom";
 import Inscription from "./pages/inscription/Inscription";
 import Connexion from "./pages/connexion.jsx/Connexion";
 import Dashboard from "./pages/dashboard/Dashboard";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -23,5 +26,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />,
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />,
+  </QueryClientProvider>,
 );
